@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="hr_employee_form_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.col.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Información Colombia" name="colombia_info">
+                        <group>
+                            <group string="Identificación">
+                                <field name="identification_type"/>
+                                <field name="identification_id" required="1"/>
+                                <field name="expedition_date"/>
+                                <field name="expedition_place_id"/>
+                            </group>
+                            <group string="Seguridad Social">
+                                <field name="pension_fund_id"/>
+                                <field name="health_fund_id"/>
+                                <field name="severance_fund_id"/>
+                                <field name="arl_id"/>
+                                <field name="risk_class"/>
+                                <field name="ccf_id"/>
+                            </group>
+                        </group>
+                        <group string="Información Bancaria">
+                            <group>
+                                <field name="bank_account_id"/>
+                                <field name="bank_account_type"/>
+                            </group>
+                            <group>
+                                <field name="wage_type"/>
+                                <field name="payment_method"/>
+                            </group>
+                        </group>
+                        <group string="Familiares">
+                            <field name="family_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="relationship"/>
+                                    <field name="birth_date"/>
+                                    <field name="identification_id"/>
+                                    <field name="is_beneficiary"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="hr_employee_search_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.search.col.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="identification_id"/>
+                    <field name="pension_fund_id"/>
+                    <field name="health_fund_id"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter string="Fondo Pensión" name="pension_fund" context="{'group_by': 'pension_fund_id'}"/>
+                    <filter string="EPS" name="health_fund" context="{'group_by': 'health_fund_id'}"/>
+                    <filter string="Riesgo ARL" name="risk_class" context="{'group_by': 'risk_class'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="hr_employee_tree_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.tree.col.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="identification_id"/>
+                    <field name="pension_fund_id"/>
+                    <field name="health_fund_id"/>
+                    <field name="risk_class"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="hr_employee_kanban_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.kanban.col.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_employee_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
+                    <div t-if="record.identification_id.raw_value">
+                        <strong>ID: </strong><field name="identification_id"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

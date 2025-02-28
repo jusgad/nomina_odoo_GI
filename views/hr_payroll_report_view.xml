@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Pivot View -->
+        <record id="view_hr_payroll_report_pivot_col" model="ir.ui.view">
+            <field name="name">hr.payroll.report.pivot.col</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Análisis de Nómina" display_quantity="true">
+                    <field name="date_from" type="row" interval="month"/>
+                    <field name="department_id" type="col"/>
+                    <field name="basic_wage" type="measure"/>
+                    <field name="gross_wage" type="measure"/>
+                    <field name="net_wage" type="measure"/>
+                    <field name="total_health" type="measure"/>
+                    <field name="total_pension" type="measure"/>
+                    <field name="total_arl" type="measure"/>
+                    <field name="total_parafiscal" type="measure"/>
+                    <field name="total_provisions" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Graph View -->
+        <record id="view_hr_payroll_report_graph_col" model="ir.ui.view">
+            <field name="name">hr.payroll.report.graph.col</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <graph string="Análisis de Nómina" type="line">
+                    <field name="date_from" interval="month"/>
+                    <field name="net_wage" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_hr_payroll_report_search_col" model="ir.ui.view">
+            <field name="name">hr.payroll.report.search.col</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <search string="Análisis de Nómina">
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="contract_id"/>
+                    <separator/>
+                    <filter string="Mes Actual" name="current_month" 
+                            domain="[('date_from','&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                    ('date_from','&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Año Actual" name="current_year"
+                            domain="[('date_from','&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')),
+                                    ('date_from','&lt;=', (context_today() + relativedelta(month=12, day=31)).strftime('%Y-%m-%d'))]"/>
+                    <group expand="1" string="Agrupar Por">
+                        <filter string="Empleado" name="employee" context="{'group_by':'employee_id'}"/>
+                        <filter string="Departamento" name="department" context="{'group_by':'department_id'}"/>
+                        <filter string="Contrato" name="contract" context="{'group_by':'contract_id'}"/>
+                        <filter string="Mes" name="month" context="{'group_by':'date_from:month'}"/>
+                        <filter string="Año" name="year" context="{'group_by':'date_from:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hr_payroll_report_col" model="ir.actions.act_window">
+            <field name="name">Análisis de Nómina Colombia</field>
+            <field name="res_model">hr.payroll.report</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="view_hr_payroll_report_search_col"/>
+            <field name="context">{
+                'search_default_current_month': 1,
+                'search_default_department': 1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No hay datos de nómina para analizar
+                </p>
+            </field>
+        </record>
+
+        <!-- Dashboard Action -->
+        <record id="action_hr_payroll_dashboard_col" model="ir.actions.client">
+            <field name="name">Dashboard Nómina Colombia</field>
+            <field name="tag">payroll_dashboard_col</field>
+            <field name="target">main</field>
+        </record>
+    </data>
+</odoo>

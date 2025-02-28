@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_hr_pila_form" model="ir.ui.view">
+            <field name="name">hr.pila.form</field>
+            <field name="model">hr.pila</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_generate_file" 
+                                string="Generar Archivo" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_validate" 
+                                string="Validar" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'generated')]}"/>
+                        <button name="action_send" 
+                                string="Enviar" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'validated')]}"/>
+                        <button name="action_draft" 
+                                string="Volver a Borrador" 
+                                type="object"
+                                attrs="{'invisible': [('state', 'in', ['done'])]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="payment_date"/>
+                            </group>
+                            <group>
+                                <field name="operator_type"/>
+                                <field name="payment_method"/>
+                                <field name="bank_id" attrs="{'required': [('payment_method', '=', 'bank')]}"/>
+                                <field name="payment_reference"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Empleados" name="employees">
+                                <field name="pila_line_ids">
+                                    <tree>
+                                        <field name="employee_id"/>
+                                        <field name="contract_id"/>
+                                        <field name="wage"/>
+                                        <field name="health_base"/>
+                                        <field name="pension_base"/>
+                                        <field name="arl_base"/>
+                                        <field name="total_amount"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="total_employees"/>
+                                    <field name="total_health"/>
+                                    <field name="total_pension"/>
+                                    <field name="total_arl"/>
+                                    <field name="total_parafiscal" class="oe_subtotal_footer_separator"/>
+                                    <field name="total_amount" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </page>
+                            <page string="Archivo PILA" name="pila_file">
+                                <group>
+                                    <field name="file_data" filename="file_name"/>
+                                    <field name="file_name" invisible="1"/>
+                                </group>
+                            </page>
+                            <page string="Logs" name="logs">
+                                <field name="log_ids">
+                                    <tree>
+                                        <field name="create_date"/>
+                                        <field name="user_id"/>
+                                        <field name="action"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_hr_pila_tree" model="ir.ui.view">
+            <field name="name">hr.pila.tree</field>
+            <field name="model">hr.pila</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="payment_date"/>
+                    <field name="total_employees"/>
+                    <field name="total_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_hr_pila_search" model="ir.ui.view">
+            <field name="name">hr.pila.search</field>
+            <field name="model">hr.pila</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="payment_reference"/>
+                    <separator/>
+                    <filter string="Borrador" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Generado" name="generated" domain="[('state','=','generated')]"/>
+                    <filter string="Validado" name="validated" domain="[('state','=','validated')]"/>
+                    <filter string="Enviado" name="sent" domain="[('state','=','sent')]"/>
+                    <filter string="Completado" name="done" domain="[('state','=','done')]"/>
+                    <group expand="0" string="Agrupar Por">
+                        <filter string="Estado" name="state" context="{'group_by':'state'}"/>
+                        <filter string="Operador" name="operator_type" context="{'group_by':'operator_type'}"/>
+                        <filter string="Método de Pago" name="payment_method" context="{'group_by':'payment_method'}"/>
+                        <filter string="Mes" name="month" context="{'group_by':'date_from:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Calendar View -->
+        <record id="view_hr_pila_calendar" model="ir.ui.view">
+            <field name="name">hr.pila.calendar</field>
+            <field name="model">hr.pila</field>
+            <field name="arch" type="xml">
+                <calendar string="PILA" date_start="date_from" date_stop="date_to" color="state">
+                    <field name="name"/>
+                    <field name="total_employees"/>
+                    <field name="total_amount"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Pivot View -->
+        <record id="view_hr_pila_pivot" model="ir.ui.view">
+            <field name="name">hr.pila.pivot</field>
+            <field name="model">hr.pila</field>
+            <field name="arch" type="xml">
+                <pivot string="Análisis PILA">
+                    <field name="date_from" type="row"/>
+                    <field name="total_employees" type="measure"/>
+                    <field name="total_health" type="measure"/>
+                    <field name="total_pension" type="measure"/>
+                    <field name="total_arl" type="measure"/>
+                    <field name="total_parafiscal" type="measure"/>
+                    <field name="total_amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Graph View -->
+        <record id="view_hr_pila_graph" model="ir.ui.view">
+            <field name="name">hr.pila.graph</field>
+            <field name="model">hr.pila</field>
+            <field name="arch" type="xml">
+                <graph string="PILA" type="bar">
+                    <field name="date_from"/>
+                    <field name="total_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hr_pila" model="ir.actions.act_window">
+            <field name="name">PILA</field>
+            <field name="res_model">hr.pila</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Cree su primer registro PILA
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_hr_pila"
+                  name="PILA"
+                  parent="hr_payroll.menu_hr_payroll_root"
+                  action="action_hr_pila"
+                  sequence="17"/>
+    </data>
+</odoo>

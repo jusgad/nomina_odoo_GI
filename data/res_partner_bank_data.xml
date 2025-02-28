@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Bancos Colombianos -->
+        <record id="res_bank_bancolombia" model="res.bank">
+            <field name="name">Bancolombia</field>
+            <field name="bic">COLOCOBM</field>
+            <field name="country" ref="base.co"/>
+        </record>
+
+        <record id="res_bank_bogota" model="res.bank">
+            <field name="name">Banco de Bogotá</field>
+            <field name="bic">BBOGCOBC</field>
+            <field name="country" ref="base.co"/>
+        </record>
+
+        <record id="res_bank_davivienda" model="res.bank">
+            <field name="name">Davivienda</field>
+            <field name="bic">CAFECOBB</field>
+            <field name="country" ref="base.co"/>
+        </record>
+
+        <record id="res_bank_bbva" model="res.bank">
+            <field name="name">BBVA Colombia</field>
+            <field name="bic">BBVACOBB</field>
+            <field name="country" ref="base.co"/>
+        </record>
+
+        <record id="res_bank_popular" model="res.bank">
+            <field name="name">Banco Popular</field>
+            <field name="bic">POPLCOBB</field>
+            <field name="country" ref="base.co"/>
+        </record>
+    </data>
+</odoo>

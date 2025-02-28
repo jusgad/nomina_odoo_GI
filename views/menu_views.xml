@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Menú Principal -->
+        <menuitem id="menu_nomina_colombia_root"
+                  name="Nómina Colombia"
+                  parent="hr_payroll.menu_hr_payroll_root"
+                  sequence="10"/>
+
+        <!-- Submenús -->
+        <menuitem id="menu_nomina_colombia_configuration"
+                  name="Configuración"
+                  parent="menu_nomina_colombia_root"
+                  sequence="100"/>
+
+        <!-- Menú de Operaciones -->
+        <menuitem id="menu_nomina_colombia_operations"
+                  name="Operaciones"
+                  parent="menu_nomina_colombia_root"
+                  sequence="10">
+
+            <menuitem id="menu_hr_payslip_col"
+                      name="Comprobantes"
+                      action="hr_payroll.action_view_hr_payslip_form"
+                      sequence="10"/>
+
+            <menuitem id="menu_hr_payslip_run_col"
+                      name="Lotes de Nómina"
+                      action="action_hr_payslip_run_col"
+                      sequence="20"/>
+
+            <menuitem id="menu_hr_electronic_payroll"
+                      name="Nómina Electrónica"
+                      action="action_hr_electronic_payroll"
+                      sequence="30"/>
+
+            <menuitem id="menu_hr_pila"
+                      name="PILA"
+                      action="action_hr_pila"
+                      sequence="40"/>
+        </menuitem>
+
+        <!-- Menú de Reportes -->
+        <menuitem id="menu_nomina_colombia_reports"
+                  name="Reportes"
+                  parent="menu_nomina_colombia_root"
+                  sequence="20">
+
+            <menuitem id="menu_hr_payroll_report_col"
+                      name="Reportes de Nómina"
+                      action="action_hr_payroll_report_col"
+                      sequence="10"/>
+
+            <menuitem id="menu_hr_provision_report"
+                      name="Reporte de Provisiones"
+                      action="action_hr_provision_report"
+                      sequence="20"/>
+
+            <menuitem id="menu_hr_pila_report"
+                      name="Reporte PILA"
+                      action="action_hr_pila_report"
+                      sequence="30"/>
+        </menuitem>
+
+        <!-- Menú de Configuración -->
+        <menuitem id="menu_nomina_colombia_config"
+                  name="Configuración"
+                  parent="menu_nomina_colombia_root"
+                  sequence="100">
+
+            <menuitem id="menu_hr_salary_rule_category_col"
+                      name="Categorías de Reglas"
+                      action="action_hr_salary_rule_category_col"
+                      sequence="10"/>
+
+            <menuitem id="menu_hr_salary_rule_col"
+                      name="Reglas Salariales"
+                      action="action_hr_salary_rule_col"
+                      sequence="20"/>
+
+            <menuitem id="menu_hr_payroll_structure_col"
+                      name="Estructuras Salariales"
+                      action="action_hr_payroll_structure_col"
+                      sequence="30"/>
+
+            <menuitem id="menu_hr_work_entry_type_col"
+                      name="Tipos de Entrada"
+                      action="action_hr_work_entry_type_col"
+                      sequence="40"/>
+
+            <menuitem id="menu_hr_pila_config"
+                      name="Configuración PILA"
+                      action="action_hr_pila_config"
+                      sequence="50"/>
+
+            <menuitem id="menu_hr_electronic_payroll_config"
+                      name="Configuración NE"
+                      action="action_hr_electronic_payroll_config"
+                      sequence="60"/>
+        </menuitem>
+
+        <!-- Menú de Maestros -->
+        <menuitem id="menu_nomina_colombia_masters"
+                  name="Maestros"
+                  parent="menu_nomina_colombia_root"
+                  sequence="90">
+
+            <menuitem id="menu_hr_pension_fund"
+                      name="Fondos de Pensión"
+                      action="action_hr_pension_fund"
+                      sequence="10"/>
+
+            <menuitem id="menu_hr_health_fund"
+                      name="EPS"
+                      action="action_hr_health_fund"
+                      sequence="20"/>
+
+            <menuitem id="menu_hr_severance_fund"
+                      name="Fondos de Cesantías"
+                      action="action_hr_severance_fund"
+                      sequence="30"/>
+
+            <menuitem id="menu_hr_arl"
+                      name="ARL"
+                      action="action_hr_arl"
+                      sequence="40"/>
+
+            <menuitem id="menu_hr_ccf"
+                      name="Cajas de Compensación"
+                      action="action_hr_ccf"
+                      sequence="50"/>
+        </menuitem>
+    </data>
+</odoo>

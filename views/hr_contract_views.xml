@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="hr_contract_form_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.col.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Información Colombia" name="colombia_info">
+                            <group>
+                                <group string="Detalles del Contrato">
+                                    <field name="contract_type_id"/>
+                                    <field name="wage_type"/>
+                                    <field name="integral_salary"/>
+                                    <field name="transport_allowance"/>
+                                    <field name="risk_class"/>
+                                </group>
+                                <group string="Deducciones">
+                                    <field name="pension_percentage"/>
+                                    <field name="health_percentage"/>
+                                    <field name="arl_percentage"/>
+                                </group>
+                            </group>
+                            <group string="Otros Beneficios">
+                                <field name="benefits_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="amount"/>
+                                        <field name="periodicity"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="hr_contract_search_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.search.col.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="contract_type_id"/>
+                    <field name="wage_type"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter string="Tipo Contrato" name="contract_type" context="{'group_by': 'contract_type_id'}"/>
+                    <filter string="Tipo Salario" name="wage_type" context="{'group_by': 'wage_type'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="hr_contract_tree_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.tree.col.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="contract_type_id"/>
+                    <field name="wage_type"/>
+                    <field name="integral_salary"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

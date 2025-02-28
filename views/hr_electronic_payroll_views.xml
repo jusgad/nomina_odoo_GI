@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_hr_electronic_payroll_form" model="ir.ui.view">
+            <field name="name">hr.electronic.payroll.form</field>
+            <field name="model">hr.electronic.payroll</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_validate" 
+                                string="Validar" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_generate_xml" 
+                                string="Generar XML" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'validated')]}"/>
+                        <button name="action_send_dian" 
+                                string="Enviar DIAN" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'generated')]}"/>
+                        <button name="action_draft" 
+                                string="Volver a Borrador" 
+                                type="object"
+                                attrs="{'invisible': [('state', 'in', ['sent','accepted'])]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="payment_date"/>
+                            </group>
+                            <group>
+                                <field name="payslip_ids" widget="many2many_tags"/>
+                                <field name="total_employees"/>
+                                <field name="total_amount"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Documentos DIAN" name="dian_docs">
+                                <group>
+                                    <group string="XML">
+                                        <field name="xml_file" filename="xml_filename"/>
+                                        <field name="xml_filename" invisible="1"/>
+                                        <field name="xml_validation_state"/>
+                                    </group>
+                                    <group string="Respuesta">
+                                        <field name="dian_response"/>
+                                        <field name="dian_response_date"/>
+                                        <field name="dian_acknowledgment_number"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Logs" name="logs">
+                                <field name="log_ids">
+                                    <tree>
+                                        <field name="create_date"/>
+                                        <field name="user_id"/>
+                                        <field name="action"/>
+                                        <field name="message"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_hr_electronic_payroll_tree" model="ir.ui.view">
+            <field name="name">hr.electronic.payroll.tree</field>
+            <field name="model">hr.electronic.payroll</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="total_employees"/>
+                    <field name="total_amount"/>
+                    <field name="state"/>
+                    <field name="dian_acknowledgment_number"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_hr_electronic_payroll_search" model="ir.ui.view">
+            <field name="name">hr.electronic.payroll.search</field>
+            <field name="model">hr.electronic.payroll</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="dian_acknowledgment_number"/>
+                    <separator/>
+                    <filter string="Borrador" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Validado" name="validated" domain="[('state','=','validated')]"/>
+                    <filter string="Generado" name="generated" domain="[('state','=','generated')]"/>
+                    <filter string="Enviado" name="sent" domain="[('state','=','sent')]"/>
+                    <filter string="Aceptado" name="accepted" domain="[('state','=','accepted')]"/>
+                    <group expand="0" string="Agrupar Por">
+                        <filter string="Estado" name="state" context="{'group_by':'state'}"/>
+                        <filter string="Mes" name="month" context="{'group_by':'date_from:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hr_electronic_payroll" model="ir.actions.act_window">
+            <field name="name">Nómina Electrónica</field>
+            <field name="res_model">hr.electronic.payroll</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Cree su primer documento de nómina electrónica
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

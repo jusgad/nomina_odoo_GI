@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payslip_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <!-- Encabezado del Comprobante -->
+                <div class="row">
+                    <div class="col-6">
+                        <h2>Comprobante de Pago</h2>
+                        <p>
+                            <strong>Período:</strong>
+                            <span t-field="o.date_from"/> - <span t-field="o.date_to"/>
+                        </p>
+                    </div>
+                    <div class="col-6 text-right">
+                        <p>
+                            <strong>Referencia:</strong>
+                            <span t-field="o.number"/>
+                        </p>
+                        <p>
+                            <strong>Fecha:</strong>
+                            <span t-field="o.date"/>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Información del Empleado -->
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <strong>Empleado:</strong>
+                        <p t-field="o.employee_id.name"/>
+                        <p>
+                            <t t-if="o.employee_id.identification_type">
+                                <span t-field="o.employee_id.identification_type"/>:
+                            </t>
+                            <span t-field="o.employee_id.identification_id"/>
+                        </p>
+                        <p t-if="o.employee_id.job_id">
+                            <strong>Cargo:</strong>
+                            <span t-field="o.employee_id.job_id.name"/>
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p t-if="o.contract_id">
+                            <strong>Contrato:</strong>
+                            <span t-field="o.contract_id.name"/>
+                        </p>
+                        <p>
+                            <strong>Salario Base:</strong>
+                            <span t-field="o.contract_id.wage"
+                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                        </p>
+                        <p t-if="o.contract_id.department_id">
+                            <strong>Departamento:</strong>
+                            <span t-field="o.contract_id.department_id.name"/>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Detalle de Conceptos -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Concepto</th>
+                                    <th class="text-right">Cantidad</th>
+                                    <th class="text-right">Valor</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Devengados -->
+                                <tr>
+                                    <td colspan="5" class="table-active">
+                                        <strong>Devengados</strong>
+                                    </td>
+                                </tr>
+                                <t t-foreach="o.line_ids.filtered(lambda l: l.category_id.code in ['BASIC', 'ALW', 'EXTRA'])" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.code"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-right">
+                                            <span t-field="line.quantity"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.total"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!-- Deducciones -->
+                                <tr>
+                                    <td colspan="5" class="table-active">
+                                        <strong>Deducciones</strong>
+                                    </td>
+                                </tr>
+                                <t t-foreach="o.line_ids.filtered(lambda l: l.category_id.code in ['DED', 'LOAN'])" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.code"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-right">
+                                            <span t-field="line.quantity"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.total"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <!-- Totales -->
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>Total Devengado:</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="sum(o.line_ids.filtered(lambda l: l.category_id.code in ['BASIC', 'ALW', 'EXTRA']).mapped('total'))"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <strong>Total Deducciones:</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="sum(o.line_ids.filtered(lambda l: l.category_id.code in ['DED', 'LOAN']).mapped('total'))"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-top">
+                                    <td colspan="4" class="text-right">
+                                        <strong>Neto a Pagar:</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong t-field="o.net_wage"
+                                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Información de Pago -->
+                <div class="row mt-4" t-if="o.employee_id.bank_account_id">
+                    <div class="col-12">
+                        <h4>Información de Pago</h4>
+                        <p>
+                            <strong>Banco:</strong>
+                            <span t-field="o.employee_id.bank_account_id.bank_id.name"/>
+                        </p>
+                        <p>
+                            <strong>Cuenta:</strong>
+                            <span t-field="o.employee_id.bank_account_id.acc_number"/>
+                        </p>
+                        <p>
+                            <strong>Tipo de Cuenta:</strong>
+                            <span t-field="o.employee_id.bank_account_id.acc_type"/>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Notas y Observaciones -->
+                <div class="row mt-4" t-if="o.note">
+                    <div class="col-12">
+                        <h4>Observaciones</h4>
+                        <p t-field="o.note"/>
+                    </div>
+                </div>
+
+                <!-- Firma -->
+                <div class="row mt-5">
+                    <div class="col-6">
+                        <p>_____________________</p>
+                        <p>Firma del Empleado</p>
+                    </div>
+                    <div class="col-6">
+                        <p>_____________________</p>
+                        <p>Firma Autorizada</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_payslip">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="nomina_colombia.report_payslip_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

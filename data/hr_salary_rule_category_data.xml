@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Categorías de Reglas Salariales -->
+        <record id="hr_salary_rule_category_basic_col" model="hr.salary.rule.category">
+            <field name="name">Salario Básico</field>
+            <field name="code">BASIC</field>
+        </record>
+
+        <record id="hr_salary_rule_category_gross_col" model="hr.salary.rule.category">
+            <field name="name">Salario Bruto</field>
+            <field name="code">GROSS</field>
+        </record>
+
+        <record id="hr_salary_rule_category_net_col" model="hr.salary.rule.category">
+            <field name="name">Neto a Pagar</field>
+            <field name="code">NET</field>
+        </record>
+
+        <record id="hr_salary_rule_category_aux_col" model="hr.salary.rule.category">
+            <field name="name">Auxilios y Subsidios</field>
+            <field name="code">AUX</field>
+        </record>
+
+        <record id="hr_salary_rule_category_extra_col" model="hr.salary.rule.category">
+            <field name="name">Horas Extra y Recargos</field>
+            <field name="code">EXTRA</field>
+        </record>
+
+        <record id="hr_salary_rule_category_comp_col" model="hr.salary.rule.category">
+            <field name="name">Compensaciones</field>
+            <field name="code">COMP</field>
+        </record>
+
+        <record id="hr_salary_rule_category_ded_col" model="hr.salary.rule.category">
+            <field name="name">Deducciones</field>
+            <field name="code">DED</field>
+        </record>
+
+        <record id="hr_salary_rule_category_soc_col" model="hr.salary.rule.category">
+            <field name="name">Seguridad Social</field>
+            <field name="code">SOC</field>
+        </record>
+
+        <record id="hr_salary_rule_category_para_col" model="hr.salary.rule.category">
+            <field name="name">Parafiscales</field>
+            <field name="code">PARA</field>
+        </record>
+
+        <record id="hr_salary_rule_category_prov_col" model="hr.salary.rule.category">
+            <field name="name">Provisiones</field>
+            <field name="code">PROV</field>
+        </record>
+
+        <record id="hr_salary_rule_category_ret_col" model="hr.salary.rule.category">
+            <field name="name">Retención en la Fuente</field>
+            <field name="code">RET</field>
+        </record>
+    </data>
+</odoo>

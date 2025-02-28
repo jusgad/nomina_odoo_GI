@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="hr_payslip_run_form_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.col.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Nómina Electrónica" name="electronic_payroll">
+                            <group>
+                                <group string="Estado DIAN">
+                                    <field name="electronic_payroll_state"/>
+                                    <field name="electronic_payroll_date"/>
+                                    <field name="electronic_payroll_batch_number"/>
+                                </group>
+                                <group string="Totales">
+                                    <field name="total_employees"/>
+                                    <field name="total_basic"/>
+                                    <field name="total_gross"/>
+                                    <field name="total_net"/>
+                                </group>
+                            </group>
+                            <group string="Acciones DIAN">
+                                <button name="action_generate_electronic_batch"
+                                        string="Generar Lote NE"
+                                        type="object"
+                                        class="oe_highlight"
+                                        attrs="{'invisible': [('electronic_payroll_state', '!=', 'draft')]}"/>
+                                <button name="action_send_electronic_batch"
+                                        string="Enviar Lote DIAN"
+                                        type="object"
+                                        class="oe_highlight"
+                                        attrs="{'invisible': [('electronic_payroll_state', '!=', 'generated')]}"/>
+                            </group>
+                        </page>
+                        <page string="Reportes" name="reports">
+                            <group>
+                                <group string="Archivos Bancarios">
+                                    <button name="action_generate_bank_file"
+                                            string="Generar Archivo Bancario"
+                                            type="object"
+                                            class="oe_highlight"/>
+                                    <field name="bank_file" filename="bank_file_name"/>
+                                    <field name="bank_file_name" invisible="1"/>
+                                </group>
+                                <group string="Resumen">
+                                    <button name="action_print_summary"
+                                            string="Imprimir Resumen"
+                                            type="object"
+                                            class="oe_highlight"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Provisiones" name="provisions">
+                            <group>
+                                <group string="Totales Provisiones">
+                                    <field name="total_prima"/>
+                                    <field name="total_cesantias"/>
+                                    <field name="total_intereses"/>
+                                    <field name="total_vacaciones"/>
+                                </group>
+                                <group string="Acciones">
+                                    <button name="action_calculate_provisions"
+                                            string="Calcular Provisiones"
+                                            type="object"
+                                            class="oe_highlight"/>
+                                    <button name="action_generate_provision_entries"
+                                            string="Generar Asientos"
+                                            type="object"
+                                            class="oe_highlight"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="hr_payslip_run_tree_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.tree.col.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="electronic_payroll_state"/>
+                    <field name="electronic_payroll_batch_number"/>
+                    <field name="total_employees"/>
+                    <field name="total_net"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="hr_payslip_run_search_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.search.col.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="electronic_payroll_batch_number"/>
+                    <separator/>
+                    <filter string="Pendiente NE" name="pending_ne" 
+                            domain="[('electronic_payroll_state','=','draft')]"/>
+                    <filter string="Enviado DIAN" name="sent_dian" 
+                            domain="[('electronic_payroll_state','=','sent')]"/>
+                    <filter string="Aceptado DIAN" name="accepted_dian" 
+                            domain="[('electronic_payroll_state','=','accepted')]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="hr_payslip_run_kanban_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.kanban.col.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_kanban_record_body')]" position="inside">
+                    <div t-if="record.electronic_payroll_state.raw_value">
+                        <strong>Estado NE:</strong> <field name="electronic_payroll_state"/>
+                    </div>
+                    <div t-if="record.total_employees.raw_value">
+                        <strong>Empleados:</strong> <field name="total_employees"/>
+                    </div>
+                    <div t-if="record.total_net.raw_value">
+                        <strong>Total Neto:</strong> <field name="total_net"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Graph View -->
+        <record id="hr_payslip_run_graph_view_col" model="ir.ui.view">
+            <field name="name">hr.payslip.run.graph.col</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <graph string="Análisis de Lotes de Nómina" type="bar">
+                    <field name="date_start" interval="month"/>
+                    <field name="total_net" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Pivot View -->
+        <record id="hr_payslip_run_pivot_view_col" model="ir.ui.view">
+            <field name="name">hr.payslip.run.pivot.col</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <pivot string="Análisis de Lotes de Nómina">
+                    <field name="date_start" type="row" interval="month"/>
+                    <field name="total_employees" type="measure"/>
+                    <field name="total_basic" type="measure"/>
+                    <field name="total_gross" type="measure"/>
+                    <field name="total_net" type="measure"/>
+                    <field name="total_prima" type="measure"/>
+                    <field name="total_cesantias" type="measure"/>
+                    <field name="total_vacaciones" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Calendar View -->
+        <record id="hr_payslip_run_calendar_view_col" model="ir.ui.view">
+            <field name="name">hr.payslip.run.calendar.col</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="arch" type="xml">
+                <calendar string="Calendario de Lotes" 
+                         date_start="date_start" 
+                         date_stop="date_end" 
+                         color="state" 
+                         mode="month">
+                    <field name="name"/>
+                    <field name="total_employees"/>
+                    <field name="total_net"/>
+                    <field name="electronic_payroll_state"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Action Window -->
+        <record id="action_hr_payslip_run_col" model="ir.actions.act_window">
+            <field name="name">Lotes de Nómina Colombia</field>
+            <field name="res_model">hr.payslip.run</field>
+            <field name="view_mode">tree,form,kanban,graph,pivot,calendar</field>
+            <field name="context">{'default_country_id': ref('base.co')}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Cree su primer lote de nómina
+                </p>
+                <p>
+                    Los lotes de nómina le permiten procesar múltiples nóminas juntas.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_hr_payslip_run_col"
+                  name="Lotes de Nómina"
+                  parent="hr_payroll.menu_hr_payroll_root"
+                  action="action_hr_payslip_run_col"
+                  sequence="15"/>
+    </data>
+</odoo>

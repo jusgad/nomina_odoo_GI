@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Estructura Salarial Estándar -->
+        <record id="hr_payroll_structure_col_standard" model="hr.payroll.structure">
+            <field name="name">Estructura Estándar Colombia</field>
+            <field name="code">COL_STD</field>
+            <field name="type_id" ref="hr_payroll_structure_type_employee"/>
+            <field name="country_id" ref="base.co"/>
+            <field name="rule_ids" eval="[
+                (4, ref('hr_salary_rule_basic_col')),
+                (4, ref('hr_salary_rule_transport_col')),
+                (4, ref('hr_salary_rule_he_diurna_col')),
+                (4, ref('hr_salary_rule_health_col')),
+                (4, ref('hr_salary_rule_pension_col')),
+                (4, ref('hr_salary_rule_prima_prov_col')),
+                (4, ref('hr_salary_rule_cesantias_prov_col')),
+                (4, ref('hr_salary_rule_int_cesantias_prov_col')),
+                (4, ref('hr_salary_rule_vacaciones_prov_col')),
+                (4, ref('hr_salary_rule_sena_col')),
+                (4, ref('hr_salary_rule_icbf_col')),
+                (4, ref('hr_salary_rule_ccf_col')),
+                (4, ref('hr_salary_rule_net_col'))
+            ]"/>
+        </record>
+
+        <!-- Estructura Salarial Integral -->
+        <record id="hr_payroll_structure_col_integral" model="hr.payroll.structure">
+            <field name="name">Estructura Salario Integral Colombia</field>
+            <field name="code">COL_INT</field>
+            <field name="type_id" ref="hr_payroll_structure_type_employee"/>
+            <field name="country_id" ref="base.co"/>
+            <field name="rule_ids" eval="[
+                (4, ref('hr_salary_rule_basic_col')),
+                (4, ref('hr_salary_rule_health_col')),
+                (4, ref('hr_salary_rule_pension_col')),
+                (4, ref('hr_salary_rule_sena_col')),
+                (4, ref('hr_salary_rule_icbf_col')),
+                (4, ref('hr_salary_rule_ccf_col')),
+                (4, ref('hr_salary_rule_net_col'))
+            ]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Plantilla del Documento de Liquidación de Cesantías -->
+        <template id="report_severance_payment_document">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Título del Documento -->
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h2>Liquidación de Cesantías</h2>
+                            <p>Período: <span t-field="o.date_from"/> - <span t-field="o.date_to"/></p>
+                        </div>
+                    </div>
+
+                    <!-- Información del Empleado -->
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td><strong>Empleado:</strong></td>
+                                    <td><span t-field="o.employee_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Identificación:</strong></td>
+                                    <td>
+                                        <span t-field="o.employee_id.identification_type"/>
+                                        <span t-field="o.employee_id.identification_id"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cargo:</strong></td>
+                                    <td><span t-field="o.contract_id.job_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha Ingreso:</strong></td>
+                                    <td><span t-field="o.contract_id.date_start"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td><strong>Salario Base:</strong></td>
+                                    <td>
+                                        <span t-field="o.contract_id.wage"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tipo Contrato:</strong></td>
+                                    <td><span t-field="o.contract_id.contract_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fondo Cesantías:</strong></td>
+                                    <td><span t-field="o.employee_id.severance_fund_id.name"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Base de Liquidación -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Base de Liquidación</h4>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th class="text-right">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Salario Base</td>
+                                        <td class="text-right">
+                                            <span t-field="o.wage_amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="o.transport_allowance">
+                                        <td>Auxilio de Transporte</td>
+                                        <td class="text-right">
+                                            <span t-field="o.transport_allowance"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr t-foreach="o.get_additional_income()" t-as="income">
+                                        <td><t t-esc="income['name']"/></td>
+                                        <td class="text-right">
+                                            <span t-esc="income['amount']"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <td><strong>Total Base</strong></td>
+                                        <td class="text-right">
+                                            <strong t-field="o.total_base"
+                                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Liquidación -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Liquidación de Cesantías</h4>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th class="text-right">Días</th>
+                                        <th class="text-right">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Cesantías del Período</td>
+                                        <td class="text-right">
+                                            <span t-field="o.worked_days"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="o.severance_amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Intereses de Cesantías</td>
+                                        <td class="text-right">
+                                            <span t-field="o.worked_days"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="o.interest_amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <td colspan="2"><strong>Total a Pagar</strong></td>
+                                        <td class="text-right">
+                                            <strong t-field="o.total_amount"
+                                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Información de Pago -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Información de Pago</h4>
+                            <table class="table table-sm table-bordered">
+                                <tr>
+                                    <td width="30%"><strong>Fondo de Cesantías:</strong></td>
+                                    <td><span t-field="o.employee_id.severance_fund_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha de Consignación:</strong></td>
+                                    <td><span t-field="o.payment_date"/></td>
+                                </tr>
+                                <tr t-if="o.payment_reference">
+                                    <td><strong>Referencia de Pago:</strong></td>
+                                    <td><span t-field="o.payment_reference"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="row mt-4" t-if="o.notes">
+                        <div class="col-12">
+                            <h4>Observaciones</h4>
+                            <p t-field="o.notes"/>
+                        </div>
+                    </div>
+
+                    <!-- Firmas -->
+                    <div class="row mt-5">
+                        <div class="col-6 text-center">
+                            <p>_____________________</p>
+                            <p>Elaborado por</p>
+                            <p t-if="o.prepared_by">
+                                <span t-field="o.prepared_by.name"/>
+                            </p>
+                        </div>
+                        <div class="col-6 text-center">
+                            <p>_____________________</p>
+                            <p>Recibido por</p>
+                            <p>
+                                <span t-field="o.employee_id.name"/>
+                                <br/>
+                                <span t-field="o.employee_id.identification_id"/>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Pie de Página Legal -->
+                    <div class="row mt-5">
+                        <div class="col-12 small">
+                            <p class="text-muted">
+                                Este documento constituye la liquidación de cesantías de acuerdo con lo establecido 
+                                en el Código Sustantivo del Trabajo y demás normas vigentes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Plantilla Principal -->
+        <template id="report_severance_payment">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="nomina_colombia.report_severance_payment_document"/>
+                </t>
+            </t>
+        </template>
+
+        <!-- Registro del Reporte -->
+        <record id="action_report_severance_payment" model="ir.actions.report">
+            <field name="name">Liquidación de Cesantías</field>
+            <field name="model">hr.severance.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nomina_colombia.report_severance_payment</field>
+            <field name="report_file">nomina_colombia.report_severance_payment</field>
+            <field name="print_report_name">'Liquidacion_Cesantias_%s' % (object.employee_id.name)</field>
+            <field name="binding_model_id" ref="model_hr_severance_payment"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

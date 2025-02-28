@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Tipos de Contrato -->
+        <record id="hr_contract_type_indefinido" model="hr.contract.type">
+            <field name="name">Término Indefinido</field>
+            <field name="code">INDEF</field>
+            <field name="country_id" ref="base.co"/>
+        </record>
+
+        <record id="hr_contract_type_fijo" model="hr.contract.type">
+            <field name="name">Término Fijo</field>
+            <field name="code">FIJO</field>
+            <field name="country_id" ref="base.co"/>
+        </record>
+
+        <record id="hr_contract_type_obra" model="hr.contract.type">
+            <field name="name">Obra o Labor</field>
+            <field name="code">OBRA</field>
+            <field name="country_id" ref="base.co"/>
+        </record>
+
+        <record id="hr_contract_type_aprendizaje" model="hr.contract.type">
+            <field name="name">Aprendizaje</field>
+            <field name="code">APREND</field>
+            <field name="country_id" ref="base.co"/>
+        </record>
+
+        <record id="hr_contract_type_integral" model="hr.contract.type">
+            <field name="name">Salario Integral</field>
+            <field name="code">INTEG</field>
+            <field name="country_id" ref="base.co"/>
+        </record>
+    </data>
+</odoo>

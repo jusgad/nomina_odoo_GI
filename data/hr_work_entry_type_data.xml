@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Tipos de Entrada de Trabajo -->
+        <record id="work_entry_type_hed_col" model="hr.work.entry.type">
+            <field name="name">Hora Extra Diurna</field>
+            <field name="code">HED</field>
+            <field name="is_leave">False</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="work_entry_type_hen_col" model="hr.work.entry.type">
+            <field name="name">Hora Extra Nocturna</field>
+            <field name="code">HEN</field>
+            <field name="is_leave">False</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <record id="work_entry_type_hefd_col" model="hr.work.entry.type">
+            <field name="name">Hora Extra Festiva Diurna</field>
+            <field name="code">HEFD</field>
+            <field name="is_leave">False</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">12</field>
+        </record>
+
+        <record id="work_entry_type_hefn_col" model="hr.work.entry.type">
+            <field name="name">Hora Extra Festiva Nocturna</field>
+            <field name="code">HEFN</field>
+            <field name="is_leave">False</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">13</field>
+        </record>
+
+        <record id="work_entry_type_rn_col" model="hr.work.entry.type">
+            <field name="name">Recargo Nocturno</field>
+            <field name="code">RN</field>
+            <field name="is_leave">False</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">14</field>
+        </record>
+
+        <record id="work_entry_type_rf_col" model="hr.work.entry.type">
+            <field name="name">Recargo Festivo</field>
+            <field name="code">RF</field>
+            <field name="is_leave">False</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <!-- Tipos de Ausencia -->
+        <record id="work_entry_type_vac_col" model="hr.work.entry.type">
+            <field name="name">Vacaciones</field>
+            <field name="code">VAC</field>
+            <field name="is_leave">True</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="work_entry_type_inc_col" model="hr.work.entry.type">
+            <field name="name">Incapacidad</field>
+            <field name="code">INC</field>
+            <field name="is_leave">True</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">21</field>
+        </record>
+
+        <record id="work_entry_type_lic_col" model="hr.work.entry.type">
+            <field name="name">Licencia</field>
+            <field name="code">LIC</field>
+            <field name="is_leave">True</field>
+            <field name="round_days">HALF</field>
+            <field name="sequence">22</field>
+        </record>
+    </data>
+</odoo>

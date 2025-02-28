@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Reglas Salariales -->
+        
+        <!-- Básico -->
+        <record id="hr_salary_rule_basic_col" model="hr.salary.rule">
+            <field name="name">Salario Básico</field>
+            <field name="code">BASIC</field>
+            <field name="category_id" ref="hr_salary_rule_category_basic_col"/>
+            <field name="sequence">5</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+        </record>
+
+        <!-- Auxilio de Transporte -->
+        <record id="hr_salary_rule_transport_col" model="hr.salary.rule">
+            <field name="name">Auxilio de Transporte</field>
+            <field name="code">TRANS</field>
+            <field name="category_id" ref="hr_salary_rule_category_aux_col"/>
+            <field name="sequence">10</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.wage &lt;= 2 * contract.company_id.minimum_wage</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.company_id.transport_allowance</field>
+        </record>
+
+        <!-- Horas Extra -->
+        <record id="hr_salary_rule_he_diurna_col" model="hr.salary.rule">
+            <field name="name">Hora Extra Diurna</field>
+            <field name="code">HED</field>
+            <field name="category_id" ref="hr_salary_rule_category_extra_col"/>
+            <field name="sequence">15</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = worked_days.HED.number_of_hours * (contract.wage / 240) * 1.25</field>
+        </record>
+
+        <!-- Seguridad Social -->
+        <record id="hr_salary_rule_health_col" model="hr.salary.rule">
+            <field name="name">Aporte Salud</field>
+            <field name="code">HEALTH</field>
+            <field name="category_id" ref="hr_salary_rule_category_soc_col"/>
+            <field name="sequence">50</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">-4.0</field>
+            <field name="amount_percentage_base">contract.wage</field>
+        </record>
+
+        <record id="hr_salary_rule_pension_col" model="hr.salary.rule">
+            <field name="name">Aporte Pensión</field>
+            <field name="code">PENSION</field>
+            <field name="category_id" ref="hr_salary_rule_category_soc_col"/>
+            <field name="sequence">51</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">-4.0</field>
+            <field name="amount_percentage_base">contract.wage</field>
+        </record>
+
+        <!-- Provisiones -->
+        <record id="hr_salary_rule_prima_prov_col" model="hr.salary.rule">
+            <field name="name">Provisión Prima</field>
+            <field name="code">PRIMA_PROV</field>
+            <field name="category_id" ref="hr_salary_rule_category_prov_col"/>
+            <field name="sequence">90</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">8.33</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+        </record>
+
+        <record id="hr_salary_rule_cesantias_prov_col" model="hr.salary.rule">
+            <field name="name">Provisión Cesantías</field>
+            <field name="code">CES_PROV</field>
+            <field name="category_id" ref="hr_salary_rule_category_prov_col"/>
+            <field name="sequence">91</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">8.33</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+        </record>
+
+        <record id="hr_salary_rule_int_cesantias_prov_col" model="hr.salary.rule">
+            <field name="name">Provisión Intereses Cesantías</field>
+            <field name="code">INT_CES_PROV</field>
+            <field name="category_id" ref="hr_salary_rule_category_prov_col"/>
+            <field name="sequence">92</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">1.0</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+        </record>
+
+        <record id="hr_salary_rule_vacaciones_prov_col" model="hr.salary.rule">
+            <field name="name">Provisión Vacaciones</field>
+            <field name="code">VAC_PROV</field>
+            <field name="category_id" ref="hr_salary_rule_category_prov_col"/>
+            <field name="sequence">93</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">4.17</field>
+            <field name="amount_percentage_base">categories.BASIC</field>
+        </record>
+
+        <!-- Parafiscales -->
+        <record id="hr_salary_rule_sena_col" model="hr.salary.rule">
+            <field name="name">SENA</field>
+            <field name="code">SENA</field>
+            <field name="category_id" ref="hr_salary_rule_category_para_col"/>
+            <field name="sequence">95</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">2.0</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+        </record>
+
+        <record id="hr_salary_rule_icbf_col" model="hr.salary.rule">
+            <field name="name">ICBF</field>
+            <field name="code">ICBF</field>
+            <field name="category_id" ref="hr_salary_rule_category_para_col"/>
+            <field name="sequence">96</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">3.0</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+        </record>
+
+        <record id="hr_salary_rule_ccf_col" model="hr.salary.rule">
+            <field name="name">Caja de Compensación</field>
+            <field name="code">CCF</field>
+            <field name="category_id" ref="hr_salary_rule_category_para_col"/>
+            <field name="sequence">97</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">4.0</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+        </record>
+
+        <!-- Neto -->
+        <record id="hr_salary_rule_net_col" model="hr.salary.rule">
+            <field name="name">Neto a Pagar</field>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_salary_rule_category_net_col"/>
+            <field name="sequence">200</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.AUX + categories.EXTRA + categories.COMP + categories.DED + categories.SOC</field>
+        </record>
+    </data>
+</odoo>

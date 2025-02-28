@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_income_certificate_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <!-- Título del Certificado -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2>Certificado de Ingresos y Retenciones</h2>
+                        <h3>Año Gravable <t t-esc="year"/></h3>
+                    </div>
+                </div>
+
+                <!-- Información de la Empresa -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td colspan="2">
+                                    <strong>EMPLEADOR</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="30%">Razón Social:</td>
+                                <td><span t-field="o.company_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>NIT:</td>
+                                <td><span t-field="o.company_id.vat"/></td>
+                            </tr>
+                            <tr>
+                                <td>Dirección:</td>
+                                <td><span t-field="o.company_id.street"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Información del Empleado -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td colspan="2">
+                                    <strong>EMPLEADO</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="30%">Nombre:</td>
+                                <td><span t-field="o.employee_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>Identificación:</td>
+                                <td>
+                                    <span t-field="o.employee_id.identification_type"/>
+                                    <span t-field="o.employee_id.identification_id"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Período Certificado:</td>
+                                <td>
+                                    <span t-field="o.date_from"/> - <span t-field="o.date_to"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Ingresos -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">INGRESOS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.get_income_details()" t-as="line">
+                                    <td width="70%"><span t-esc="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="line['amount']"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td><strong>Total Ingresos</strong></td>
+                                    <td class="text-right">
+                                        <strong t-field="o.total_income"
+                                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Deducciones -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">DEDUCCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.get_deduction_details()" t-as="line">
+                                    <td width="70%"><span t-esc="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="line['amount']"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td><strong>Total Deducciones</strong></td>
+                                    <td class="text-right">
+                                        <strong t-field="o.total_deductions"
+                                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Retención en la Fuente -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">RETENCIÓN EN LA FUENTE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td width="70%">Total Retención en la Fuente</td>
+                                    <td class="text-right">
+                                        <span t-field="o.total_retention"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Firma y Fecha -->
+                <div class="row mt-5">
+                    <div class="col-6">
+                        <p>_____________________</p>
+                        <p>Firma Autorizada</p>
+                        <p t-field="o.company_id.name"/>
+                        <p>NIT: <span t-field="o.company_id.vat"/></p>
+                    </div>
+                    <div class="col-6 text-right">
+                        <p>Fecha de Expedición:</p>
+                        <p t-field="o.date"
+                           t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_income_certificate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="nomina_colombia.report_income_certificate_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

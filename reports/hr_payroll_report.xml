@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Reporte Principal de Nómina -->
+        <record id="action_hr_payroll_report" model="ir.actions.client">
+            <field name="name">Análisis de Nómina</field>
+            <field name="tag">payroll_report_colombia</field>
+            <field name="params" eval="{
+                'pivot_measures': ['basic_wage', 'gross_wage', 'net_wage', 'total_health', 'total_pension', 'total_arl', 'total_parafiscal', 'total_provisions'],
+                'pivot_row_groupby': ['date_from:month'],
+                'pivot_column_groupby': ['department_id'],
+                'graph_type': 'line',
+                'graph_mode': 'line',
+                'graph_groupbys': ['date_from:month']
+            }"/>
+        </record>
+
+        <!-- Vista Pivot -->
+        <record id="view_hr_payroll_report_pivot" model="ir.ui.view">
+            <field name="name">hr.payroll.report.pivot</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Análisis de Nómina" display_quantity="true">
+                    <field name="date_from" type="row" interval="month"/>
+                    <field name="department_id" type="col"/>
+                    <field name="basic_wage" type="measure"/>
+                    <field name="gross_wage" type="measure"/>
+                    <field name="net_wage" type="measure"/>
+                    <field name="total_health" type="measure"/>
+                    <field name="total_pension" type="measure"/>
+                    <field name="total_arl" type="measure"/>
+                    <field name="total_parafiscal" type="measure"/>
+                    <field name="total_provisions" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Vista Gráfica -->
+        <record id="view_hr_payroll_report_graph" model="ir.ui.view">
+            <field name="name">hr.payroll.report.graph</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <graph string="Análisis de Nómina" type="line" sample="1">
+                    <field name="date_from" interval="month"/>
+                    <field name="net_wage" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Vista de Búsqueda -->
+        <record id="view_hr_payroll_report_search" model="ir.ui.view">
+            <field name="name">hr.payroll.report.search</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <search string="Análisis de Nómina">
+                    <!-- Campos de Búsqueda -->
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="contract_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+
+                    <!-- Filtros -->
+                    <filter string="Mes Actual" name="month" 
+                            domain="[('date_from','&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                    ('date_from','&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Año Actual" name="year"
+                            domain="[('date_from','&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')),
+                                    ('date_from','&lt;=', (context_today() + relativedelta(month=12, day=31)).strftime('%Y-%m-%d'))]"/>
+                    
+                    <separator/>
+                    <filter string="Salario Integral" name="integral_salary" 
+                            domain="[('contract_type','=','integral')]"/>
+                    <filter string="Salario Ordinario" name="ordinary_salary" 
+                            domain="[('contract_type','=','ordinary')]"/>
+
+                    <!-- Agrupaciones -->
+                    <group expand="1" string="Agrupar Por">
+                        <filter string="Empleado" name="employee" context="{'group_by':'employee_id'}"/>
+                        <filter string="Departamento" name="department" context="{'group_by':'department_id'}"/>
+                        <filter string="Cargo" name="job" context="{'group_by':'job_id'}"/>
+                        <filter string="Contrato" name="contract" context="{'group_by':'contract_id'}"/>
+                        <filter string="Tipo Contrato" name="contract_type" context="{'group_by':'contract_type'}"/>
+                        <filter string="Mes" name="month_group" context="{'group_by':'date_from:month'}"/>
+                        <filter string="Año" name="year_group" context="{'group_by':'date_from:year'}"/>
+                        <filter string="Compañía" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+
+                    <!-- Medidas -->
+                    <group expand="1" string="Medidas">
+                        <filter string="Salario Base" name="measure_basic_wage" 
+                                context="{'pivot_measures': ['basic_wage']}"/>
+                        <filter string="Salario Bruto" name="measure_gross_wage" 
+                                context="{'pivot_measures': ['gross_wage']}"/>
+                        <filter string="Salario Neto" name="measure_net_wage" 
+                                context="{'pivot_measures': ['net_wage']}"/>
+                        <filter string="Total Salud" name="measure_health" 
+                                context="{'pivot_measures': ['total_health']}"/>
+                        <filter string="Total Pensión" name="measure_pension" 
+                                context="{'pivot_measures': ['total_pension']}"/>
+                        <filter string="Total ARL" name="measure_arl" 
+                                context="{'pivot_measures': ['total_arl']}"/>
+                        <filter string="Total Parafiscales" name="measure_parafiscal" 
+                                context="{'pivot_measures': ['total_parafiscal']}"/>
+                        <filter string="Total Provisiones" name="measure_provisions" 
+                                context="{'pivot_measures': ['total_provisions']}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Vista Dashboard -->
+        <record id="view_hr_payroll_report_dashboard" model="ir.ui.view">
+            <field name="name">hr.payroll.report.dashboard</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <dashboard>
+                    <view type="graph" ref="nomina_colombia.view_hr_payroll_report_graph"/>
+                    <view type="pivot" ref="nomina_colombia.view_hr_payroll_report_pivot"/>
+                    
+                    <group>
+                        <group>
+                            <aggregate name="total_employees" field="employee_count" string="Total Empleados"/>
+                            <aggregate name="total_departments" field="department_count" string="Departamentos"/>
+                        </group>
+                        <group>
+                            <aggregate name="avg_salary" field="basic_wage" string="Salario Promedio" group_operator="avg"/>
+                            <aggregate name="total_net" field="net_wage" string="Total Neto"/>
+                        </group>
+                        <group>
+                            <aggregate name="total_health" field="total_health" string="Total Salud"/>
+                            <aggregate name="total_pension" field="total_pension" string="Total Pensión"/>
+                        </group>
+                        <group>
+                            <aggregate name="total_provisions" field="total_provisions" string="Total Provisiones"/>
+                            <aggregate name="total_parafiscal" field="total_parafiscal" string="Total Parafiscales"/>
+                        </group>
+                    </group>
+
+                    <view type="cohort" ref="nomina_colombia.view_hr_payroll_report_cohort"/>
+                </dashboard>
+            </field>
+        </record>
+
+        <!-- Vista Cohort -->
+        <record id="view_hr_payroll_report_cohort" model="ir.ui.view">
+            <field name="name">hr.payroll.report.cohort</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <cohort string="Análisis de Retención" 
+                       date_start="date_from"
+                       date_stop="date_to"
+                       interval="month"
+                       measure="net_wage"/>
+            </field>
+        </record>
+
+        <!-- Acción del Menú -->
+        <record id="action_hr_payroll_report_colombia" model="ir.actions.act_window">
+            <field name="name">Análisis de Nómina Colombia</field>
+            <field name="res_model">hr.payroll.report</field>
+            <field name="view_mode">dashboard,pivot,graph</field>
+            <field name="search_view_id" ref="view_hr_payroll_report_search"/>
+            <field name="context">{
+                'search_default_year': 1,
+                'search_default_department': 1,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No hay datos de nómina para analizar
+                </p>
+                <p>
+                    Este reporte le permitirá analizar sus datos de nómina de diferentes maneras.
+                    Puede filtrar por departamento, empleado, período y más.
+                    Use las opciones de agrupación para obtener diferentes vistas de sus datos.
+                </p>
+            </field>
+        </record>
+
+        <!-- Elemento del Menú -->
+        <menuitem id="menu_hr_payroll_report_colombia"
+                  name="Análisis de Nómina"
+                  parent="hr_payroll.menu_hr_payroll_report"
+                  action="action_hr_payroll_report_colombia"
+                  sequence="10"/>
+    </data>
+</odoo>

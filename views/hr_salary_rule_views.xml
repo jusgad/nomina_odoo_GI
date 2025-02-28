@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="hr_salary_rule_form_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form.col.inherit</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="is_colombia_rule"/>
+                    <field name="dian_code" attrs="{'invisible': [('is_colombia_rule', '=', False)]}"/>
+                    <field name="electronic_concept" attrs="{'invisible': [('is_colombia_rule', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//page[@name='rules']" position="after">
+                    <page string="Configuración Colombia" name="colombia_config" attrs="{'invisible': [('is_colombia_rule', '=', False)]}">
+                        <group>
+                            <group string="Configuración DIAN">
+                                <field name="dian_type"/>
+                                <field name="include_in_electronic"/>
+                                <field name="affect_basis"/>
+                            </group>
+                            <group string="Configuración Contable">
+                                <field name="provision_account_id"/>
+                                <field name="expense_account_id"/>
+                                <field name="liability_account_id"/>
+                            </group>
+                        </group>
+                        <group string="Configuración Avanzada">
+                            <group>
+                                <field name="include_in_social_security"/>
+                                <field name="include_in_retention"/>
+                                <field name="include_in_provisions"/>
+                            </group>
+                            <group>
+                                <field name="is_mandatory"/>
+                                <field name="requires_validation"/>
+                                <field name="max_percentage"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="hr_salary_rule_tree_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.tree.col.inherit</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="dian_code" optional="show"/>
+                    <field name="electronic_concept" optional="show"/>
+                    <field name="dian_type" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="hr_salary_rule_search_view_col_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.search.col.inherit</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="dian_code"/>
+                    <field name="electronic_concept"/>
+                    <separator/>
+                    <filter string="Reglas Colombia" name="colombia_rules" domain="[('is_colombia_rule', '=', True)]"/>
+                    <filter string="Nómina Electrónica" name="electronic_rules" domain="[('include_in_electronic', '=', True)]"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter string="Tipo DIAN" name="dian_type" context="{'group_by': 'dian_type'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hr_salary_rule_col" model="ir.actions.act_window">
+            <field name="name">Reglas Salariales Colombia</field>
+            <field name="res_model">hr.salary.rule</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_colombia_rule', '=', True)]</field>
+            <field name="context">{'default_is_colombia_rule': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Cree su primera regla salarial para Colombia
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
