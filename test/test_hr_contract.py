@@ -25,7 +25,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Test',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,  # SMLV 2024
+            'wage': 1423500.0,  # SMLV 2024
             'state': 'draft',
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
@@ -51,7 +51,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Salario',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
         })
@@ -65,7 +65,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Fechas',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'date_end': '2024-12-31',
             'contract_type': 'fijo',
@@ -80,7 +80,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Beneficios',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
             'transport_allowance': True,
@@ -94,7 +94,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Estados',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
         })
@@ -112,7 +112,7 @@ class TestHrContract(TransactionCase):
         contract_fijo = self.env['hr.contract'].create({
             'name': 'Contrato Fijo',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'date_end': '2024-12-31',
             'contract_type': 'fijo',
@@ -123,7 +123,7 @@ class TestHrContract(TransactionCase):
         contract_indef = self.env['hr.contract'].create({
             'name': 'Contrato Indefinido',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'indefinido',
         })
@@ -134,7 +134,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Riesgo',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
             'risk_class': '1',
@@ -148,7 +148,7 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Prueba',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
             'trial_period': True,
@@ -164,13 +164,13 @@ class TestHrContract(TransactionCase):
         contract = self.env['hr.contract'].create({
             'name': 'Contrato Cambio Salario',
             'employee_id': self.employee.id,
-            'wage': 1160000.0,
+            'wage': 1423500.0,
             'date_start': '2024-01-01',
             'contract_type': 'fijo',
         })
 
         # Registrar histórico de cambios de salario
-        contract.wage = 1200000.0
+        contract.wage = 1423500.0
         wage_history = self.env['hr.contract.wage.history'].search([
             ('contract_id', '=', contract.id)
         ])

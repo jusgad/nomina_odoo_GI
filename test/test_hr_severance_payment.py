@@ -1,12 +1,10 @@
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from freezegun import freeze_time
-
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_compare
-
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 @tagged('post_install', '-at_install', 'severance')
 class TestHrSeverancePayment(TransactionCase):

@@ -1,9 +1,8 @@
-from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError, UserError
-
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 
 @tagged('post_install', '-at_install', 'payroll_reports')
 class TestHrPayrollReports(TransactionCase):
